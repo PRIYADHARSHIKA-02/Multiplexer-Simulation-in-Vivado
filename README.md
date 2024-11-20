@@ -1,4 +1,7 @@
-SIMULATION AND IMPLEMENTATION OF LOGIC GATES
+
+## Write and Simulate 4:1 Mux using Verilog HDL in 
+Gate level, Data flow, Behavioral, Structural 
+Modeling styles with testbench
 
 ## AIM:
 
