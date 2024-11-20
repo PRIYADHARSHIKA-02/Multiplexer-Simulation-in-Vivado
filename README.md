@@ -67,15 +67,24 @@ Verilog Code:
 
 4:1 MUX Gate-Level Implementation
 
-module multiplexer(s1,s0,a,b,c,d,y); 
+module multiplexer(s1,s0,a,b,c,d,y);
+
 input s1,s0,a,b,c,d; 
+
 output y; 
-wire[3:0]w; 
+
+wire[3:0]w;
+
 and g1(w[0],~s1,~s0,a); 
-and g2(w[1],~s1,s0,b); 
-and g3(w[2],s1,~s0,c); 
-and g4(w[3],s1,s0,d); 
-or g5(y,w[0],w[1],w[2],w[3]); 
+
+and g2(w[1],~s1,s0,b);
+
+and g3(w[2],s1,~s0,c);
+
+and g4(w[3],s1,s0,d);
+
+or g5(y,w[0],w[1],w[2],w[3]);
+
 endmodule
 
 Output:
@@ -84,8 +93,11 @@ Output:
 4:1 MUX Data Flow Implementation
 
 module mul_data( output Y, input I0, I1, I2, I3, input S0, S1 ); 
+
 assign Y = (~S1 & ~S0 & I0) | (~S1 & S0 & I1) | (S1 & ~S0 & I2) | (S1 & S0 & I3);
+
 endmodule
+
 
 Output:
 ![image](https://github.com/user-attachments/assets/9f946d9a-ca33-470c-a8e3-8050ba867a88)
@@ -94,17 +106,29 @@ Output:
 4:1 MUX Behavioral Implementation
 
 module mux4_to_1_behavioral ( input wire A, input wire B, input wire C, input wire D, input wire S0, input wire S1, output reg Y ); 
+
 always @(*) 
+
 begin 
+
 case ({S1, S0}) 
+
 2'b00: Y = A; 
+
 2'b01: Y = B; 
+
 2'b10: Y = C; 
+
 2'b11: Y = D; 
+
 default: Y = 1'bx; 
+
 endcase 
+
 end 
+
 endmodule
+
 
 Output:
 ![image](https://github.com/user-attachments/assets/3d4cbc72-6825-4cb9-b687-ed60788f042d)
@@ -112,53 +136,88 @@ Output:
 
 4:1 MUX Structural Implementation
 
-module mux(s, i, y); 
+module mux(s, i, y);
+
 input [1:0] s; 
+
 input [3:0] i; 
+
 output reg y;
+
 always @(s or i) 
+
 begin 
+
 case (s) 
+
 2'b00: y = i[0]; 
+
 2'b01: y = i[1]; 
+
 2'b10: y = i[2]; 
+
 2'b11: y = i[3]; 
+
 default: y = 1'b0; 
+
 endcase 
+
 end 
+
 endmodule
+
 
 Output:
 ![image](https://github.com/user-attachments/assets/be47e2f9-0138-443e-80a9-c39791dc4df6)
 
 
 Testbench Implementation 
+
 `timescale 1ns / 1ps 
+
 module multiplexer_tb; // Declare inputs as reg and outputs as wire 
+
 reg s1, s0, a, b, c, d; 
+
 wire y; 
+
 multiplexer uut ( .s1(s1), .s0(s0), .a(a), .b(b), .c(c), .d(d), .y(y) ); 
+
 initial 
+
 begin
 
+
 $monitor("s1 = %b, s0 = %b, a = %b, b = %b, c = %b, d = %b, y = %b", s1, s0, a, b, c, d, y); 
+
 s1 = 0; s0 = 0; a = 1; b = 0; c = 0; d = 0; #10; // Test case 1 
+
 s1 = 0; s0 = 1; a = 0; b = 1; c = 0; d = 0; #10; // Test case 2 
+
 s1 = 1; s0 = 0; a = 0; b = 0; c = 1; d = 0; #10; // Test case 3 
+
 s1 = 1; s0 = 1; a = 0; b = 0; c = 0; d = 1; #10; // Test case 4
 
 $finish; 
+
+
 end 
+
 endmodule
 
 Sample Output
 
 Time=0 | S1=0 S0=0 | Inputs: A=0 B=0 C=0 D=0 | Y_gate=0 | Y_dataflow=0 | Y_behavioral=0 | Y_structural=0
+
 Time=10 | S1=0 S0=0 | Inputs: A=0 B=0 C=0 D=0 | Y_gate=0 | Y_dataflow=0 | Y_behavioral=0 | Y_structural=0
+
 Time=20 | S1=0 S0=0 | Inputs: A=0 B=0 C=0 D=1 | Y_gate=0 | Y_dataflow=0 | Y_behavioral=0 | Y_structural=0
+
 Time=30 | S1=0 S0=1 | Inputs: A=0 B=0 C=0 D=1 | Y_gate=0 | Y_dataflow=0 | Y_behavioral=0 | Y_structural=0
+
 Time=40 | S1=1 S0=0 | Inputs: A=0 B=0 C=0 D=1 | Y_gate=0 | Y_dataflow=0 | Y_behavioral=0 | Y_structural=0
-...
+
+
 
 Conclusion:
 
